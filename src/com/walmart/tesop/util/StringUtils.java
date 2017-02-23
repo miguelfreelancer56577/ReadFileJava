@@ -12,6 +12,8 @@ public class StringUtils {
 	public static final String characters = "<([{\\^=$!|]})?*+>";
 	public static final String priceCharacters = ",.";
 	public static final String space = " ";
+//	Regular Expressions
+	public static final String noNumeric = "\\D";
 	
 	public static boolean isString(String value) {
 		boolean isString = false;
