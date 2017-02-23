@@ -48,7 +48,7 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\tesop\\file_int\\MT940_CITIBANAMEX_201612090805"));
+			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_2017020308050000-copia"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
@@ -322,10 +322,19 @@ public class MT940Reader {
 			sl.setCardType(value.substring(10, 11));
 			sl.setFoundsCode(value.substring(11, 12));
 			
+//			if the foundsCode variable has a the third character of the Currency Code 
+			
 			if(sl.getFoundsCode() != null && !sl.getFoundsCode().trim().equalsIgnoreCase("N")) {
 				
 				StringBuilder sba = new StringBuilder("");
 				
+				/*
+				 * Search into the variable value.
+				 * Check if the concurrent character is a number, comma or point. If is correct add to sba variable.
+				 * When the character is not number, comma or point, break out the loop, and setter amount value. 
+				 * 
+				 * 
+				 */
 				for(int k = 12; k < value.length(); k ++) {
 					String v = value.substring(k, k+1);
 					
@@ -338,9 +347,12 @@ public class MT940Reader {
 				
 //				sl.setAmount(value.split(sl.getFoundsCode())[1].split("N")[0]);
 				sl.setAmount(sba.toString());
+//				Every is setter to "N"
 				sl.setEntryMethod("N");
 			} else if(sl.getFoundsCode() != null && sl.getFoundsCode().trim().equalsIgnoreCase("N")) {
+//				he split the value in 3 parts and else gets its price, this value has a third character of the currency code  
 				sl.setAmount(value.split("N")[1]);
+//				Every is setter to "N"
 				sl.setEntryMethod("N");
 			} 
 //			else {
@@ -351,9 +363,13 @@ public class MT940Reader {
 				if(value.contains("INT")) {
 					sl.setEntryReason("INT");
 				} else {
+//					the Method no setter the Entry Reason because It assume that is not Found Code
+//					if it is into here, it has the third character currency code.
+//					Assign null because not have two character "N", throw an Exception
 					sl.setEntryReason(value.split("N")[2].substring(0, 3));
 				}
 			} catch(Exception e) {
+//				Assign "INT" by default 
 				sl.setEntryReason("INT");
 			}
 			try {
@@ -361,18 +377,25 @@ public class MT940Reader {
 					sl.setAccountOwnerReference("NULL");
 					sl.setInheritedReference(lastReference.getLastReference());
 				} else {
-					String substring = value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length());
-					StringBuilder sbsb = new StringBuilder("");
+					try {
+						String substring = value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length());
+						StringBuilder sbsb = new StringBuilder("");
+						
+						for(int i = substring.length()-1; i >= 0; i--) {
+							
+							if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
+								sbsb.append(String.valueOf(substring.charAt(i)));
+							} else {
+								continue;
+							}
+						}
+						sl.setAccountOwnerReference(sbsb.reverse().toString());
+					} catch (Exception e) {
+						String substring = value.split("N")[1].split("//")[0];
+//						cleans up
+						sl.setAccountOwnerReference(substring.replaceAll(StringUtils.noNumeric ,""));
+					}
 					
-					for(int i = substring.length()-1; i >= 0; i--) {
-			    		
-			    		if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
-			    			sbsb.append(String.valueOf(substring.charAt(i)));
-			    		} else {
-			    			continue;
-			    		}
-			    	}
-					sl.setAccountOwnerReference(sbsb.reverse().toString());
 					lastReference.setLastReference(sl.getAccountOwnerReference());
 					sl.setInheritedReference("NULL");
 					
