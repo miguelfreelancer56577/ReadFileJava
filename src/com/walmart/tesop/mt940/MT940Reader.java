@@ -16,6 +16,7 @@ import com.walmart.tesop.beans.SuplementaryDetails99;
 import com.walmart.tesop.beans.AccountOwnerInformation86;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 import com.walmart.tesop.beans.LastReference;
+import com.walmart.tesop.exception.Tag61Exception;
 
 /**
  * Operative Treasury - TESOP
@@ -48,7 +49,7 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_2017020308050000-copia"));
+			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201612051757"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
@@ -284,7 +285,7 @@ public class MT940Reader {
 			}
 			
 			try { 
-				String[] values = value.split("/")[4].split("     ");
+				String[] values = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ");
 	    		String alpRef = values[values.length-1];
 	    		StringBuilder sb = new StringBuilder("");
 	    		boolean initialSpace = true;
@@ -386,14 +387,23 @@ public class MT940Reader {
 							if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
 								sbsb.append(String.valueOf(substring.charAt(i)));
 							} else {
+//								throw new Tag61Exception("tag: " + value);
 								continue;
 							}
 						}
 						sl.setAccountOwnerReference(sbsb.reverse().toString());
-					} catch (Exception e) {
+					}
+//					catch (Tag61Exception e) {
+//						e.printStackTrace();
+////						System.exit(0);
+//					} 
+					catch (Exception e) {
+						System.out.println("tag: " + value);
 						String substring = value.split("N")[1].split("//")[0];
+						System.out.println("sub-field: " + substring);
 //						cleans up
 						sl.setAccountOwnerReference(substring.replaceAll(StringUtils.noNumeric ,""));
+						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
 					}
 					
 					lastReference.setLastReference(sl.getAccountOwnerReference());
