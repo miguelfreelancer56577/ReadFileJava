@@ -12,8 +12,13 @@ public class StringUtils {
 	public static final String characters = "<([{\\^=$!|]})?*+>";
 	public static final String priceCharacters = ",.";
 	public static final String space = " ";
-//	Regular Expressions
+	/*
+	 * Regular Expressions
+	 */
+//	this expression is to validate a string with characters not numeric 
 	public static final String noNumeric = "\\D";
+//	this expression validate if the string has more of two spaces
+	public static final String hasTwoSpaces = "\\s{2,}";
 	
 	public static boolean isString(String value) {
 		boolean isString = false;
@@ -174,6 +179,8 @@ public class StringUtils {
     	try {
     		if(value == null || value.trim().equals(""))
     			return "";
+    		
+    		value = value.replaceAll(StringUtils.hasTwoSpaces, " ");
     		
     		if(value.length() > 20) {
     			return value.substring(0, 20);
