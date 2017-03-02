@@ -3,8 +3,13 @@ package com.walmart.tesop.util;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
+	
+	public static Pattern pattern;
+	public static Matcher matcher;
 
 	public static final String lowerAlphabet = "abcdefghijklmnñopqrstuvwxyz";
 	public static final String upperAlphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
@@ -12,6 +17,7 @@ public class StringUtils {
 	public static final String characters = "<([{\\^=$!|]})?*+>";
 	public static final String priceCharacters = ",.";
 	public static final String space = " ";
+	
 	/*
 	 * Regular Expressions
 	 */
@@ -19,6 +25,22 @@ public class StringUtils {
 	public static final String noNumeric = "\\D";
 //	this expression validate if the string has more of two spaces
 	public static final String hasTwoSpaces = "\\s{2,}";
+//	this expression validate if the tag 86 has into it the reference number in the sub-field "Further Payment Description", when the payment type was made it in MXN 
+	public static final String refeAtfirstIntoDescTag86 = "^\\d{1,16}";
+//	this expression validate if the tag 86 has into it the reference number in the sub-field "Further Payment Description", when the payment type was made it in USD
+	public static final String refeIntoDescTag86 = "REF:\\s{0,}\\d{1,16}";
+	
+	/**
+	 * This method receives two String, the first contents the regular expression and the second contents the concurrent string to match 
+	 * @param regex
+	 * @param input
+	 * @return matcher
+	 */
+	public static final Matcher findPattern(String regex, String input){
+		pattern = Pattern.compile(regex);
+	    matcher = pattern.matcher(input);
+		return matcher;
+	}
 	
 	public static boolean isString(String value) {
 		boolean isString = false;
