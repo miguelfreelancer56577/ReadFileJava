@@ -65,6 +65,7 @@ public class MT940Reader {
 				if(sCurrentLine == null) {
 					if(statementLine != null) {
 						statementLine.calculateBranchOperation();
+						statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
 						objList.add(trn20);
@@ -87,6 +88,7 @@ public class MT940Reader {
 					if(trn20 != null && trn20.getIsNew() == false) {
 						if(statementLine != null) {
 							statementLine.calculateBranchOperation();
+							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
@@ -130,9 +132,10 @@ public class MT940Reader {
 					} else if(statementLine.isThereStatementLine61() || 
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
-						statementLine.calculateBranchOperation();
-						trn20.getStatementLineList().add(statementLine);
-						statementLine = new StatementLine();
+							statementLine.calculateBranchOperation();
+							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
+							trn20.getStatementLineList().add(statementLine);
+							statementLine = new StatementLine();
 					}
 					
 					value = sCurrentLine.substring(4, sCurrentLine.length());
@@ -167,7 +170,8 @@ public class MT940Reader {
 					if(statementLine.isThereAccountOwnerInformation86() == true) {
 						reference = statementLine.getAccountOwnerInformation86().getReference();
 						reference = new StringBuilder().append(reference).append(value).toString();
-						statementLine.getAccountOwnerInformation86().setReference(StringUtils.rPadAlphanumericReference(reference, 20));
+//						statementLine.getAccountOwnerInformation86().setReference(StringUtils.rPadAlphanumericReference(reference, 20));
+						statementLine.getAccountOwnerInformation86().setReference(reference);
 					}
 						
 					lastTagId = tagId;
@@ -231,7 +235,7 @@ public class MT940Reader {
 			if(length <= 1)
 				return 0;
 			
-			if(currentLine != null && currentLine.trim().contains("-"))
+			if(currentLine != null && currentLine.trim().contains("-") && currentLine.trim().length() == 1)
 				return 0;
 			if(currentLine != null && currentLine.trim().contains(":20:"))
 				return 20;
@@ -271,39 +275,62 @@ public class MT940Reader {
 			aoi = new AccountOwnerInformation86();
 			aoi.setProductTypeId(value.split("/")[1]);
 			aoi.setProductType(value.split("/")[2]);
+			 
+			int numberSlash = 0;
+			
 			try {
+				
 				String branch = "";
-				branch = value.split("/")[4].split("     ")[0];
-							
-				if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()))
-					aoi.setBranchOperation("NULL");
-				else
-					aoi.setBranchOperation(branch);
-				 
+				
+				numberSlash = value.split("/").length;
+				
+				if(numberSlash > 5){
+					throw new Exception();
+				}else{
+					branch = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ")[0];
+					if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()))
+						aoi.setBranchOperation("NULL");
+					else
+						aoi.setBranchOperation(branch);
+				}
 			} catch(Exception ex1) {
 				aoi.setBranchOperation("NULL"); 
 			}
 			
 			try { 
-				String[] values = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ");
-	    		String alpRef = values[values.length-1];
-	    		StringBuilder sb = new StringBuilder("");
-	    		boolean initialSpace = true;
+//				String[] values = value.split("/")[4].split("     ");
+//				String[] values = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ");
+//				if(numberSlash > 4){
+//					String alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+//				}
+				
+				String alpRef = "";
+				
+				if(numberSlash > 4){
+					alpRef  = value.split("/")[5].replaceAll(StringUtils.hasTwoSpaces, " ");
+				}else{
+					alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+				}
+				
+				alpRef  = alpRef.replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
+//	    		String alpRef = values[values.length-1];
+//	    		StringBuilder sb = new StringBuilder("");
+//	    		boolean initialSpace = true;
+//	    		
+//	    		if(values != null && !StringUtils.isNumber(alpRef)) {
+//	    			for(int index = 0; index < alpRef.length(); index++) {
+//	    				if(String.valueOf(alpRef.charAt(index)).equals(StringUtils.space) && initialSpace == true) {
+//	    					continue;
+//	    				} else {
+//	    					sb.append(String.valueOf(alpRef.charAt(index)));
+//	    					initialSpace = false;
+//	    				}
+//	    			}
+//	    		} else {
+//	    			sb.append(StringUtils.rPadAlphanumericReference(alpRef.trim(), 20));
+//	    		}
 	    		
-	    		if(values != null && !StringUtils.isNumber(alpRef)) {
-	    			for(int index = 0; index < alpRef.length(); index++) {
-	    				if(String.valueOf(alpRef.charAt(index)).equals(StringUtils.space) && initialSpace == true) {
-	    					continue;
-	    				} else {
-	    					sb.append(String.valueOf(alpRef.charAt(index)));
-	    					initialSpace = false;
-	    				}
-	    			}
-	    		} else {
-	    			sb.append(StringUtils.rPadAlphanumericReference(alpRef.trim(), 20));
-	    		}
-	    		
-	    		aoi.setReference(sb.toString());
+	    		aoi.setReference(alpRef.trim());
 				
 			} catch(Exception ex2) { aoi.setReference(""); }
 		
@@ -398,12 +425,17 @@ public class MT940Reader {
 ////						System.exit(0);
 //					} 
 					catch (Exception e) {
-						System.out.println("tag: " + value);
+//						System.out.println("tag: " + value);
 						String substring = value.split("N")[1].split("//")[0];
-						System.out.println("sub-field: " + substring);
+						substring = substring.substring(3, substring.length());
+						if(StringUtils.isNumber(substring)){
+							sl.setAccountOwnerReference(substring.replaceAll(StringUtils.noNumeric ,""));
+						}else{
+							sl.setAccountOwnerReference("NULL");
+						}
+//						System.out.println("sub-field: " + substring);
 //						cleans up
-						sl.setAccountOwnerReference(substring.replaceAll(StringUtils.noNumeric ,""));
-						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
+//						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
 					}
 					
 					lastReference.setLastReference(sl.getAccountOwnerReference());
