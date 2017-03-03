@@ -16,7 +16,6 @@ import com.walmart.tesop.beans.SuplementaryDetails99;
 import com.walmart.tesop.beans.AccountOwnerInformation86;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 import com.walmart.tesop.beans.LastReference;
-import com.walmart.tesop.exception.Tag61Exception;
 
 /**
  * Operative Treasury - TESOP
