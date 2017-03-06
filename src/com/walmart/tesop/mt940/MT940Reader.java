@@ -48,7 +48,7 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201612051757"));
+			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201701180805"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
@@ -64,7 +64,8 @@ public class MT940Reader {
 				if(sCurrentLine == null) {
 					if(statementLine != null) {
 						statementLine.calculateBranchOperation();
-						statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
+						if(statementLine.getAccountOwnerInformation86() != null)
+							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
 						objList.add(trn20);
@@ -87,7 +88,8 @@ public class MT940Reader {
 					if(trn20 != null && trn20.getIsNew() == false) {
 						if(statementLine != null) {
 							statementLine.calculateBranchOperation();
-							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
+							if(statementLine.getAccountOwnerInformation86() != null)
+								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
@@ -132,7 +134,8 @@ public class MT940Reader {
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
-							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
+							if(statementLine.getAccountOwnerInformation86() != null)
+								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 					}
@@ -305,10 +308,10 @@ public class MT940Reader {
 				
 				String alpRef = "";
 				
-				if(numberSlash > 4){
+				if(numberSlash > 5){
 					alpRef  = value.split("/")[5].replaceAll(StringUtils.hasTwoSpaces, " ");
 				}else{
-					alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+					alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
 				}
 				
 				alpRef  = alpRef.replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
