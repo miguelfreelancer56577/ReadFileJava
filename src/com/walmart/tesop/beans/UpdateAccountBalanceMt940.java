@@ -1,7 +1,18 @@
 package com.walmart.tesop.beans;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 import com.walmart.tesop.util.StringUtils;
+
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  UpdateAccountBalanceMt940
+ * Class description: Contiene los atributos para insertar información en la tabla 'informix'.ACCOUNT_BALANCE del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
 
 public class UpdateAccountBalanceMt940 {
 	
@@ -33,6 +44,7 @@ public class UpdateAccountBalanceMt940 {
 	private String last_update; // today yyyy-mm-dd
 	private String account_number; // Integer.parseInt(trn20.getAccountIdentification25().substring(4, trn20.getAccountIdentification25().length()))
 	private String movement_dt2; //
+	private Date movementDt2;
 	
 	public UpdateAccountBalanceMt940() {
 		super();
@@ -205,6 +217,85 @@ public class UpdateAccountBalanceMt940 {
 	public void setMovement_dt2(String movement_dt2) {
 		this.movement_dt2 = movement_dt2;
 	}
+	/**
+	 * @return the movementDt2
+	 */
+	public Date getMovementDt2() {
+		return movementDt2;
+	}
+	/**
+	 * @param movementDt2 the movementDt2 to set
+	 */
+	public void setMovementDt2(Date movementDt2) {
+		this.movementDt2 = movementDt2;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UpdateAccountBalanceMt940 [movement_dt=");
+		builder.append(movement_dt);
+		builder.append(", opening_bal=");
+		builder.append(opening_bal);
+		builder.append(", closing_bal=");
+		builder.append(closing_bal);
+		builder.append(", calc_opening_bal=");
+		builder.append(calc_opening_bal);
+		builder.append(", calc_closing_bal=");
+		builder.append(calc_closing_bal);
+		builder.append(", tot_num_cr=");
+		builder.append(tot_num_cr);
+		builder.append(", tot_cr=");
+		builder.append(tot_cr);
+		builder.append(", tot_num_dr=");
+		builder.append(tot_num_dr);
+		builder.append(", tot_dr=");
+		builder.append(tot_dr);
+		builder.append(", tot_num_calc_cr=");
+		builder.append(tot_num_calc_cr);
+		builder.append(", tot_calc_cr=");
+		builder.append(tot_calc_cr);
+		builder.append(", tot_num_calc_dr=");
+		builder.append(tot_num_calc_dr);
+		builder.append(", tot_calc_dr=");
+		builder.append(tot_calc_dr);
+		builder.append(", tot_num_cash_dep=");
+		builder.append(tot_num_cash_dep);
+		builder.append(", tot_cash_dep=");
+		builder.append(tot_cash_dep);
+		builder.append(", tot_other_form_dep=");
+		builder.append(tot_other_form_dep);
+		builder.append(", tot_dep=");
+		builder.append(tot_dep);
+		builder.append(", movement_status=");
+		builder.append(movement_status);
+		builder.append(", bal_status=");
+		builder.append(bal_status);
+		builder.append(", account_inf_status=");
+		builder.append(account_inf_status);
+		builder.append(", authorize_status=");
+		builder.append(authorize_status);
+		builder.append(", overdraft_status=");
+		builder.append(overdraft_status);
+		builder.append(", user_authorize=");
+		builder.append(user_authorize);
+		builder.append(", user_modify=");
+		builder.append(user_modify);
+		builder.append(", user_id=");
+		builder.append(user_id);
+		builder.append(", last_update=");
+		builder.append(last_update);
+		builder.append(", account_number=");
+		builder.append(account_number);
+		builder.append(", movement_dt2=");
+		builder.append(movement_dt2);
+		builder.append(", movementDt2=");
+		builder.append(movementDt2);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 	
 //		content.append("   SET movement_dt = '").append(trn20.getOpeningBalance60().getBookingDate()).append("', ");
@@ -236,4 +327,6 @@ public class UpdateAccountBalanceMt940 {
 //	content.append(" WHERE account_number = '").append(Integer.parseInt(trn20.getAccountIdentification25().substring(4, trn20.getAccountIdentification25().length()))).append("'");
 //	content.append("   AND movement_dt = '2016-10-19';");			
 
+	
+	
 }
