@@ -273,28 +273,21 @@ public class MT940Reader {
 	private AccountOwnerInformation86 getAccountOwnerInformationObj(String value) {
 		AccountOwnerInformation86 aoi = null;
 		try {
-			StringBuffer reference = new StringBuffer();
+			
 			aoi = new AccountOwnerInformation86();
 			aoi.setProductTypeId(value.split("/")[1]);
 			aoi.setProductType(value.split("/")[2]);
 			 
-			int numberSlash = 0;
-			
 			try {
 				
 				String branch = "";
 				
-				numberSlash = value.split("/").length;
-				
-				if(numberSlash > 5){
-					throw new Exception();
-				}else{
 					branch = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ")[0];
 					if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()))
 						aoi.setBranchOperation("NULL");
 					else
 						aoi.setBranchOperation(branch);
-				}
+					
 			} catch(Exception ex1) {
 				aoi.setBranchOperation("NULL"); 
 			}
@@ -308,11 +301,7 @@ public class MT940Reader {
 				
 				String alpRef = "";
 				
-				if(numberSlash > 5){
-					alpRef  = value.split("/")[5].replaceAll(StringUtils.hasTwoSpaces, " ");
-				}else{
-					alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
-				}
+				alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
 				
 				alpRef  = alpRef.replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
 //	    		String alpRef = values[values.length-1];
