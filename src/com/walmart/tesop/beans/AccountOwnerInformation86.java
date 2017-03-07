@@ -5,6 +5,15 @@ import java.util.regex.Matcher;
 
 import com.walmart.tesop.util.StringUtils;
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  AccountOwnerInformation86
+ * Class description: Contiene los atributos de la sección Account Owner Information del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class AccountOwnerInformation86 {
 
 	private String productTypeId;
