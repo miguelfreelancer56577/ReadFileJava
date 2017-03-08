@@ -51,6 +51,8 @@ public class StringUtils {
 	public static final String refeAtfirstIntoDescTag86 = "^\\d{1,16}";
 //	this expression validate if the tag 86 has into it the reference number in the sub-field "Further Payment Description", when the payment type was made it in USD
 	public static final String refeIntoDescTag86 = "REF:\\s{0,}\\d{1,16}";
+//	valida si cuenta con ceros a la izquierda
+	public static final String cerosIzquierda = "^0{1,}";
 	
 	/**
 	 * This method receives two String, the first contents the regular expression and the second contents the concurrent string to match 
