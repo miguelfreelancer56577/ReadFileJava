@@ -48,7 +48,7 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201701180805"));
+			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201612051757"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
@@ -281,9 +281,18 @@ public class MT940Reader {
 			try {
 				
 				String branch = "";
-				
-					branch = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ")[0];
-					if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()))
+					
+//					Se limpia la cadena a solo un espacio entre cada palabra 
+					branch = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+					/*
+					 * Se divide la cadena a partir de cada espacio en blanco entre cada palabra y se obtiene la primer posicion
+					 * del arreglo remplazando todos los ceros a la izquierda de la referencia alfanumerica. 
+					 */
+					
+					branch = branch.split(" ")[0].replaceAll(StringUtils.cerosIzquierda, "");
+					
+//					Se valida que la referencia alfanumerica no este vacia, que no contenga la palabra NONREF, que sea numerica y que sea mayor a 3
+					if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()) || branch.length() < 3)
 						aoi.setBranchOperation("NULL");
 					else
 						aoi.setBranchOperation(branch);
