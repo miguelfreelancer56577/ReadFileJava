@@ -3,14 +3,12 @@ package com.walmart.tesop.mt940;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
-
 import java.util.List;
 import java.util.Date;
-
 import java.text.SimpleDateFormat;
 
+import com.walmart.tesop.util.Repo1;
 import com.walmart.tesop.util.StringUtils;
-
 import com.walmart.tesop.beans.StatementLine;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 import com.walmart.tesop.beans.UpdateAccountBalanceMt940;
@@ -46,6 +44,16 @@ public class MT940 {
 			InsertMovementMt940 im;
 			
 			System.out.println("objList: " + objList.size());
+			
+			StringBuilder xlsFileName = new StringBuilder("C:\\Users\\vn0x53q\\workspaceKepler\\reports\\");
+			xlsFileName.append("reportTag25BANCOMER");
+			xlsFileName.append(".xls");
+			
+			Repo1 repo1 = new Repo1(xlsFileName.toString());
+			repo1.setSheetName("BANCOMER");
+			repo1.setCellHeadName("Accounts");
+			repo1.createBodyXls(objList);
+			repo1.createFileXls();
 			
 			for(TransactionReferenceNumber20 trn20 : objList) {
 				
