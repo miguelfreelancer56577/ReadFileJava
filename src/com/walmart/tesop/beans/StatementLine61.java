@@ -87,6 +87,5 @@ public class StatementLine61 {
 	}
 	public void setMovementType(int movementType) {
 		this.movementType = movementType;
-	}
-	
+	}	
 }

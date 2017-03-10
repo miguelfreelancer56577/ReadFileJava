@@ -34,5 +34,23 @@ public class ClosingAvailableBalance64 {
 	public void setOpeningLedgerBalanceAccount(String openingLedgerBalanceAccount) {
 		this.openingLedgerBalanceAccount = openingLedgerBalanceAccount==null?"0.0":openingLedgerBalanceAccount.replace(",", ".");
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ClosingAvailableBalance64 [cardType=");
+		builder.append(cardType);
+		builder.append(", bookingDate=");
+		builder.append(bookingDate);
+		builder.append(", currencyCode=");
+		builder.append(currencyCode);
+		builder.append(", openingLedgerBalanceAccount=");
+		builder.append(openingLedgerBalanceAccount);
+		builder.append("]");
+		return builder.toString();
+	}
+	
 	
 }

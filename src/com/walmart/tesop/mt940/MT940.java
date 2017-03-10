@@ -29,7 +29,7 @@ public class MT940 {
 			MT940Reader reader = new MT940Reader();
 			
 			StringBuilder content = new StringBuilder("");
-			File file = new File("C:\\tesop\\MT940.log");
+			File file = new File("C:\\Users\\vn0x53q\\logs\\MT940.log");
 
 			if (!file.exists()) {
 				file.createNewFile();
@@ -223,6 +223,8 @@ public class MT940 {
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content.toString());
 			bw.close();
+			
+			System.out.println(content.toString());
 			
 		} catch(Exception ex) {
 			ex.printStackTrace();

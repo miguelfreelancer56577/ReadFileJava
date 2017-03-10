@@ -23,6 +23,15 @@ import java.text.DecimalFormat;
  * 
  */
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  TransactionReferenceNumber20
+ * Class description: Contiene los atributos de la sección Transaction Reference del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class TransactionReferenceNumber20 {
 	
 	private boolean isNew;
@@ -120,7 +129,6 @@ public class TransactionReferenceNumber20 {
 	}
 	public void calculateTotals() {
 		if(this.statementLineList == null || this.statementLineList.isEmpty()) {
-			System.out.println("statementLineList is null or is empty: " + this.statementLineList.isEmpty());
 			return;
 		}
 		
@@ -132,14 +140,12 @@ public class TransactionReferenceNumber20 {
 							
 				if(s61.getCardType() != null && s61.getCardType().trim().equalsIgnoreCase("D")) {					
 					if(!StringUtils.isNumber(s61.getAmount())) {
-						System.out.println("s61.getAmount() no es número: " + s61.getAmount());
 						return;
 					}
 					
 					try {
 						
 						if(new BigDecimal(s61.getAmount().replace(",", ".")).doubleValue() <= 0.0) {
-//							System.out.println("Amount is zero: " + s61.getAmount().replace(",", "."));
 							continue;
 						}
 							
@@ -151,14 +157,12 @@ public class TransactionReferenceNumber20 {
 				} else if(s61.getCardType() != null && s61.getCardType().trim().equalsIgnoreCase("C")) {
 					
 					if(!StringUtils.isNumber(s61.getAmount())) {
-						System.out.println("s61.getAmount() no es número: " + s61.getAmount());
 						return;
 					}
 					
 					try {
 						
 						if(new BigDecimal(s61.getAmount().replace(",", ".")).doubleValue() <= 0.0) {
-//							System.out.println("Amount is zero: " + s61.getAmount().replace(",", "."));
 							continue;
 						}
 						
@@ -174,6 +178,39 @@ public class TransactionReferenceNumber20 {
 //		this.totalDR = Long.parseLong(df2.format(this.totalDR));
 //		this.totalCR = Long.parseLong(df2.format(this.totalCR));
 		
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TransactionReferenceNumber20 [isNew=");
+		builder.append(isNew);
+		builder.append(", transactionReference20=");
+		builder.append(transactionReference20);
+		builder.append(", accountIdentification25=");
+		builder.append(accountIdentification25);
+		builder.append(", statementPage28=");
+		builder.append(statementPage28);
+		builder.append(", openingBalance60=");
+		builder.append(openingBalance60);
+		builder.append(", statementLineList=");
+		builder.append(statementLineList);
+		builder.append(", closingBalance62=");
+		builder.append(closingBalance62);
+		builder.append(", closingAvailableBalance64=");
+		builder.append(closingAvailableBalance64);
+		builder.append(", totalNumberCR=");
+		builder.append(totalNumberCR);
+		builder.append(", totalNumberDR=");
+		builder.append(totalNumberDR);
+		builder.append(", totalCR=");
+		builder.append(totalCR);
+		builder.append(", totalDR=");
+		builder.append(totalDR);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 }

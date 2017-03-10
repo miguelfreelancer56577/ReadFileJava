@@ -48,7 +48,7 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\tesop\\file_int\\MT940_CITIBANAMEX_201612090805"));
+			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_HSBC_20170309"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
@@ -64,6 +64,8 @@ public class MT940Reader {
 				if(sCurrentLine == null) {
 					if(statementLine != null) {
 						statementLine.calculateBranchOperation();
+						if(statementLine.getAccountOwnerInformation86() != null)
+							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
 						objList.add(trn20);
@@ -86,6 +88,8 @@ public class MT940Reader {
 					if(trn20 != null && trn20.getIsNew() == false) {
 						if(statementLine != null) {
 							statementLine.calculateBranchOperation();
+							if(statementLine.getAccountOwnerInformation86() != null)
+								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
@@ -129,9 +133,11 @@ public class MT940Reader {
 					} else if(statementLine.isThereStatementLine61() || 
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
-						statementLine.calculateBranchOperation();
-						trn20.getStatementLineList().add(statementLine);
-						statementLine = new StatementLine();
+							statementLine.calculateBranchOperation();
+							if(statementLine.getAccountOwnerInformation86() != null)
+								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
+							trn20.getStatementLineList().add(statementLine);
+							statementLine = new StatementLine();
 					}
 					
 					value = sCurrentLine.substring(4, sCurrentLine.length());
@@ -166,7 +172,8 @@ public class MT940Reader {
 					if(statementLine.isThereAccountOwnerInformation86() == true) {
 						reference = statementLine.getAccountOwnerInformation86().getReference();
 						reference = new StringBuilder().append(reference).append(value).toString();
-						statementLine.getAccountOwnerInformation86().setReference(StringUtils.rPadAlphanumericReference(reference, 20));
+//						statementLine.getAccountOwnerInformation86().setReference(StringUtils.rPadAlphanumericReference(reference, 20));
+						statementLine.getAccountOwnerInformation86().setReference(reference);
 					}
 						
 					lastTagId = tagId;
@@ -230,7 +237,7 @@ public class MT940Reader {
 			if(length <= 1)
 				return 0;
 			
-			if(currentLine != null && currentLine.trim().contains("-"))
+			if( (currentLine != null && currentLine.trim().contains("-") && currentLine.trim().length() == 1) || currentLine.trim().contains(":65:") )
 				return 0;
 			if(currentLine != null && currentLine.trim().contains(":20:"))
 				return 20;
@@ -266,43 +273,64 @@ public class MT940Reader {
 	private AccountOwnerInformation86 getAccountOwnerInformationObj(String value) {
 		AccountOwnerInformation86 aoi = null;
 		try {
-			StringBuffer reference = new StringBuffer();
+			
 			aoi = new AccountOwnerInformation86();
 			aoi.setProductTypeId(value.split("/")[1]);
 			aoi.setProductType(value.split("/")[2]);
+			 
 			try {
+				
 				String branch = "";
-				branch = value.split("/")[4].split("     ")[0];
-							
-				if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()))
-					aoi.setBranchOperation("NULL");
-				else
-					aoi.setBranchOperation(branch);
-				 
+					
+//					Se limpia la cadena a solo un espacio entre cada palabra 
+					branch = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+					/*
+					 * Se divide la cadena a partir de cada espacio en blanco entre cada palabra y se obtiene la primer posicion
+					 * del arreglo remplazando todos los ceros a la izquierda de la referencia alfanumerica. 
+					 */
+					
+					branch = branch.split(" ")[0].replaceAll(StringUtils.cerosIzquierda, "");
+					
+//					Se valida que la referencia alfanumerica no este vacia, que no contenga la palabra NONREF, que sea numerica y que sea mayor a 3
+					if(branch == null || branch.trim().contains("NONREF") || branch.trim().equalsIgnoreCase("") || !StringUtils.isNumber(branch.trim()) || branch.length() < 3)
+						aoi.setBranchOperation("NULL");
+					else
+						aoi.setBranchOperation(branch);
+					
 			} catch(Exception ex1) {
 				aoi.setBranchOperation("NULL"); 
 			}
 			
 			try { 
-				String[] values = value.split("/")[4].split("     ");
-	    		String alpRef = values[values.length-1];
-	    		StringBuilder sb = new StringBuilder("");
-	    		boolean initialSpace = true;
+//				String[] values = value.split("/")[4].split("     ");
+//				String[] values = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ");
+//				if(numberSlash > 4){
+//					String alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
+//				}
+				
+				String alpRef = "";
+				
+				alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
+				
+				alpRef  = alpRef.replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
+//	    		String alpRef = values[values.length-1];
+//	    		StringBuilder sb = new StringBuilder("");
+//	    		boolean initialSpace = true;
+//	    		
+//	    		if(values != null && !StringUtils.isNumber(alpRef)) {
+//	    			for(int index = 0; index < alpRef.length(); index++) {
+//	    				if(String.valueOf(alpRef.charAt(index)).equals(StringUtils.space) && initialSpace == true) {
+//	    					continue;
+//	    				} else {
+//	    					sb.append(String.valueOf(alpRef.charAt(index)));
+//	    					initialSpace = false;
+//	    				}
+//	    			}
+//	    		} else {
+//	    			sb.append(StringUtils.rPadAlphanumericReference(alpRef.trim(), 20));
+//	    		}
 	    		
-	    		if(values != null && !StringUtils.isNumber(alpRef)) {
-	    			for(int index = 0; index < alpRef.length(); index++) {
-	    				if(String.valueOf(alpRef.charAt(index)).equals(StringUtils.space) && initialSpace == true) {
-	    					continue;
-	    				} else {
-	    					sb.append(String.valueOf(alpRef.charAt(index)));
-	    					initialSpace = false;
-	    				}
-	    			}
-	    		} else {
-	    			sb.append(StringUtils.rPadAlphanumericReference(alpRef.trim(), 20));
-	    		}
-	    		
-	    		aoi.setReference(sb.toString());
+	    		aoi.setReference(alpRef.trim());
 				
 			} catch(Exception ex2) { aoi.setReference(""); }
 		
@@ -322,10 +350,19 @@ public class MT940Reader {
 			sl.setCardType(value.substring(10, 11));
 			sl.setFoundsCode(value.substring(11, 12));
 			
+//			if the foundsCode variable has a the third character of the Currency Code 
+			
 			if(sl.getFoundsCode() != null && !sl.getFoundsCode().trim().equalsIgnoreCase("N")) {
 				
 				StringBuilder sba = new StringBuilder("");
 				
+				/*
+				 * Search into the variable value.
+				 * Check if the concurrent character is a number, comma or point. If is correct add to sba variable.
+				 * When the character is not number, comma or point, break out the loop, and setter amount value. 
+				 * 
+				 * 
+				 */
 				for(int k = 12; k < value.length(); k ++) {
 					String v = value.substring(k, k+1);
 					
@@ -338,9 +375,12 @@ public class MT940Reader {
 				
 //				sl.setAmount(value.split(sl.getFoundsCode())[1].split("N")[0]);
 				sl.setAmount(sba.toString());
+//				Every is setter to "N"
 				sl.setEntryMethod("N");
 			} else if(sl.getFoundsCode() != null && sl.getFoundsCode().trim().equalsIgnoreCase("N")) {
+//				he split the value in 3 parts and else gets its price, this value has a third character of the currency code  
 				sl.setAmount(value.split("N")[1]);
+//				Every is setter to "N"
 				sl.setEntryMethod("N");
 			} 
 //			else {
@@ -351,9 +391,13 @@ public class MT940Reader {
 				if(value.contains("INT")) {
 					sl.setEntryReason("INT");
 				} else {
+//					the Method no setter the Entry Reason because It assume that is not Found Code
+//					if it is into here, it has the third character currency code.
+//					Assign null because not have two character "N", throw an Exception
 					sl.setEntryReason(value.split("N")[2].substring(0, 3));
 				}
 			} catch(Exception e) {
+//				Assign "INT" by default 
 				sl.setEntryReason("INT");
 			}
 			try {
@@ -361,18 +405,39 @@ public class MT940Reader {
 					sl.setAccountOwnerReference("NULL");
 					sl.setInheritedReference(lastReference.getLastReference());
 				} else {
-					String substring = value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length());
-					StringBuilder sbsb = new StringBuilder("");
+					try {
+						String substring = value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length());
+						StringBuilder sbsb = new StringBuilder("");
+						
+						for(int i = substring.length()-1; i >= 0; i--) {
+							
+							if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
+								sbsb.append(String.valueOf(substring.charAt(i)));
+							} else {
+//								throw new Tag61Exception("tag: " + value);
+								continue;
+							}
+						}
+						sl.setAccountOwnerReference(sbsb.reverse().toString());
+					}
+//					catch (Tag61Exception e) {
+//						e.printStackTrace();
+////						System.exit(0);
+//					} 
+					catch (Exception e) {
+//						System.out.println("tag: " + value);
+						String substring = value.split("N")[1].split("//")[0];
+						substring = substring.substring(3, substring.length());
+						if(StringUtils.isNumber(substring)){
+							sl.setAccountOwnerReference(substring.replaceAll(StringUtils.noNumeric ,""));
+						}else{
+							sl.setAccountOwnerReference("NULL");
+						}
+//						System.out.println("sub-field: " + substring);
+//						cleans up
+//						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
+					}
 					
-					for(int i = substring.length()-1; i >= 0; i--) {
-			    		
-			    		if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
-			    			sbsb.append(String.valueOf(substring.charAt(i)));
-			    		} else {
-			    			continue;
-			    		}
-			    	}
-					sl.setAccountOwnerReference(sbsb.reverse().toString());
 					lastReference.setLastReference(sl.getAccountOwnerReference());
 					sl.setInheritedReference("NULL");
 					

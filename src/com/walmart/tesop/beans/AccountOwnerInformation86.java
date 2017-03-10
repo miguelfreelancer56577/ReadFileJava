@@ -1,6 +1,18 @@
 package com.walmart.tesop.beans;
 
+import java.util.Arrays;
+import java.util.regex.Matcher;
+
 import com.walmart.tesop.util.StringUtils;
+
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  AccountOwnerInformation86
+ * Class description: Contiene los atributos de la sección Account Owner Information del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
 
 public class AccountOwnerInformation86 {
 
@@ -56,5 +68,26 @@ public class AccountOwnerInformation86 {
 		return "NULL";
 	}
 	
+	public void validateCurrency(String currencyCode, String bankCode){
+		final String currencyMxn = "MXN";
+		final String currencyUsd = "USD";
+		String[] arrayBankCode = new String[]{"7104","879","878"};
+		Arrays.sort(arrayBankCode);
+		if (currencyCode.trim().equals(currencyUsd)){
+			if(Arrays.binarySearch(arrayBankCode, bankCode) >= 0){
+				Matcher m = StringUtils.findPattern(StringUtils.refeIntoDescTag86, reference);
+				if(m.find() == true){
+					branchOperation = m.group(0).replaceAll(StringUtils.hasTwoSpaces, "");
+					branchOperation = branchOperation.replaceAll("REF:", "").trim();
+//					branchOperation = branchOperation.trim();
+				}
+			}
+		}
+//			suplementaryDetails99.getBankCode() 
+		reference = reference.replaceAll(StringUtils.hasTwoSpaces, "").replaceAll(StringUtils.refeIntoDescTag86,  " ");
+		reference = StringUtils.rPadAlphanumericReference(reference, 20);
+//		reference = statementLine.getAccountOwnerInformation86().getReference();
+//		StringUtils.rPadAlphanumericReference(statementLine.getAccountOwnerInformation86().getReference(), 20);
+	}
 	
 }
