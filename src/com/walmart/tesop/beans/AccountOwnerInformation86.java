@@ -84,7 +84,7 @@ public class AccountOwnerInformation86 {
 			}
 		}
 //			suplementaryDetails99.getBankCode() 
-		reference = reference.replaceAll(StringUtils.hasTwoSpaces, "");
+		reference = reference.replaceAll(StringUtils.hasTwoSpaces, "").replaceAll(StringUtils.refeIntoDescTag86,  " ");
 		reference = StringUtils.rPadAlphanumericReference(reference, 20);
 //		reference = statementLine.getAccountOwnerInformation86().getReference();
 //		StringUtils.rPadAlphanumericReference(statementLine.getAccountOwnerInformation86().getReference(), 20);
