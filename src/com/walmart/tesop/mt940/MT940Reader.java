@@ -237,7 +237,7 @@ public class MT940Reader {
 			if(length <= 1)
 				return 0;
 			
-			if(currentLine != null && currentLine.trim().contains("-") && currentLine.trim().length() == 1)
+			if( (currentLine != null && currentLine.trim().contains("-") && currentLine.trim().length() == 1) || currentLine.trim().contains(":65:") )
 				return 0;
 			if(currentLine != null && currentLine.trim().contains(":20:"))
 				return 20;
