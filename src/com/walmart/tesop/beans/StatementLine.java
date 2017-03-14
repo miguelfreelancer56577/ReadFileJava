@@ -5,6 +5,15 @@ import com.walmart.tesop.util.StringUtils;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  StatementLine
+ * Class description: Contiene los atributos de un movimiento en el reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class StatementLine {
 
 	private StatementLine61 statementLine61;

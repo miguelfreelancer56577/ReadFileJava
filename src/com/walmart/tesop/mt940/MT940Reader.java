@@ -51,7 +51,7 @@ public class MT940Reader {
 			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_HSBC_20170309"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
-			StatementLine statementLine = null; //new StatementLine();
+			StatementLine statementLine = null;
 			
 			trn20.setIsNew(true);
 			int lastTagId = 0;
