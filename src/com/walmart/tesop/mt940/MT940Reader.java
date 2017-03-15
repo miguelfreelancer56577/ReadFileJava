@@ -1,6 +1,7 @@
 package com.walmart.tesop.mt940;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class MT940Reader {
 	 * 
 	 */
 	
-	public List<TransactionReferenceNumber20> readMT940() {
+	public List<TransactionReferenceNumber20> readMT940(File nameMt940) {
 		boolean success = false;
 		BufferedReader br = null;
 		List<TransactionReferenceNumber20> objList = new ArrayList<TransactionReferenceNumber20>(1);
@@ -48,7 +49,8 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_BANCOMER_20170309"));
+//			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201703070806"));
+			br = new BufferedReader(new FileReader(nameMt940));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null; //new StatementLine();
