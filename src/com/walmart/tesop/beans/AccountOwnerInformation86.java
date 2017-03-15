@@ -21,9 +21,11 @@ public class AccountOwnerInformation86 {
 	private String branchOperation;
 	private String reference;
 	private String totalAmount;
+	private String[] skipWords;
 	
 	public AccountOwnerInformation86() {
 		super();
+		skipWords = new String[]{"NONREF"};
 	}
 	public String getProductTypeId() {
 		return productTypeId;
@@ -85,6 +87,9 @@ public class AccountOwnerInformation86 {
 		}
 //			suplementaryDetails99.getBankCode() 
 		reference = reference.replaceAll(StringUtils.hasTwoSpaces, "").replaceAll(StringUtils.refeIntoDescTag86,  " ");
+		for (String word : skipWords) {
+			reference = reference.replace(word, "");
+		}
 		reference = StringUtils.rPadAlphanumericReference(reference, 20);
 //		reference = statementLine.getAccountOwnerInformation86().getReference();
 //		StringUtils.rPadAlphanumericReference(statementLine.getAccountOwnerInformation86().getReference(), 20);
