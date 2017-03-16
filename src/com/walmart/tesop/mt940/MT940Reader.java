@@ -421,7 +421,12 @@ public class MT940Reader {
 								continue;
 							}
 						}
-						sl.setAccountOwnerReference(sbsb.reverse().toString());
+						if(sbsb.toString().equals("")){
+							sl.setAccountOwnerReference("NULL");
+						}else{
+							sl.setAccountOwnerReference(sbsb.reverse().toString());
+						}
+						
 					}
 //					catch (Tag61Exception e) {
 //						e.printStackTrace();
