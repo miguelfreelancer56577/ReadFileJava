@@ -64,6 +64,7 @@ public class MT940Reader {
 				if(sCurrentLine == null) {
 					if(statementLine != null) {
 						statementLine.calculateBranchOperation();
+						statementLine.validateRerefenceNumeric();
 						if(statementLine.getAccountOwnerInformation86() != null)
 							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
@@ -88,6 +89,7 @@ public class MT940Reader {
 					if(trn20 != null && trn20.getIsNew() == false) {
 						if(statementLine != null) {
 							statementLine.calculateBranchOperation();
+							statementLine.validateRerefenceNumeric();
 							if(statementLine.getAccountOwnerInformation86() != null)
 								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
@@ -134,6 +136,7 @@ public class MT940Reader {
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
+							statementLine.validateRerefenceNumeric();
 							if(statementLine.getAccountOwnerInformation86() != null)
 								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
