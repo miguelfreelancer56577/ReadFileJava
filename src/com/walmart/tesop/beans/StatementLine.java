@@ -92,7 +92,8 @@ public class StatementLine {
 		if(!(statementLine61 == null || statementLine61.getAccountOwnerReference().equals("NULL") || statementLine61.getAccountOwnerReference().equals("0000000000"))){
 			String accountOwnerReference = statementLine61.getAccountOwnerReference();
 			accountOwnerReference = accountOwnerReference.replace(StringUtils.cerosIzquierda, "");
-			if(suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("364"))){
+			if(suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("364")) ||
+			   suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("425"))){
 				String branchOperation = accountOwnerInformation86.validateBranchOperation();
 				branchOperation = branchOperation.replace(StringUtils.cerosIzquierda, "");
 				if(!branchOperation.equals(accountOwnerReference)){
