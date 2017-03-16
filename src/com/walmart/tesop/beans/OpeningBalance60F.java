@@ -1,5 +1,14 @@
 package com.walmart.tesop.beans;
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  OpeningBalance60F
+ * Class description: Contiene los atributos de la sección Opening Balance del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class OpeningBalance60F {
 	
 	private String cardType;
