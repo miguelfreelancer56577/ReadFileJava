@@ -56,7 +56,7 @@ public class Repo2 extends WorkBookXls {
 			        	row.createCell(3).setCellValue(statementLine.getAccountOwnerInformation86().getBranchOperation());
 			        }
 			        
-			        if(statementLine.getStatementLine61() != null && statementLine.getAccountOwnerInformation86() != null && statementLine.getStatementLine61().getAccountOwnerReference().equals(statementLine.getAccountOwnerInformation86().getBranchOperation())){
+			        if(statementLine.getStatementLine61() != null && statementLine.getAccountOwnerInformation86() != null && statementLine.getStatementLine61().getAccountOwnerReference().replace(StringUtils.cerosIzquierda, "").equals(statementLine.getAccountOwnerInformation86().getBranchOperation().replace(StringUtils.cerosIzquierda, ""))){
 						row.createCell(4).setCellValue(equal);
 					}else{
 						row.createCell(4).setCellValue(noEqual);
