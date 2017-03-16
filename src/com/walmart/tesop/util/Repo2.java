@@ -10,6 +10,8 @@ import com.walmart.tesop.beans.StatementLine;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 
 public class Repo2 extends WorkBookXls {
+	
+	public int numRow = 1;
 
 	public Repo2(String pathName) throws IOException {
 		super(pathName);
@@ -37,31 +39,43 @@ public class Repo2 extends WorkBookXls {
 		
 		if(statementLineList != null){
 			
-			HSSFRow row = sheet.createRow((short)numRow);
-			
 			for (StatementLine statementLine : statementLineList) {
 				
-				if(statementLine.getSuplementaryDetails99() != null && statementLine.getSuplementaryDetails99().getBankCode() != null && statementLine.getSuplementaryDetails99().getBankCode().trim().equals("1700")){
+				HSSFRow row = sheet.createRow((short)this.numRow++);
+				
+//				if(statementLine.getSuplementaryDetails99() != null && statementLine.getSuplementaryDetails99().getBankCode() != null){
 					
 					row.createCell(0).setCellValue(account);
-					row.createCell(1).setCellValue("364");
-			        row.createCell(2).setCellValue(statementLine.getStatementLine61().getAccountOwnerReference());
-			        row.createCell(3).setCellValue(statementLine.getAccountOwnerInformation86().getBranchOperation());
+					if(statementLine.getSuplementaryDetails99() != null){
+						row.createCell(1).setCellValue(statementLine.getSuplementaryDetails99().getBankCode());
+					}
+					if(statementLine.getStatementLine61() != null){
+						row.createCell(2).setCellValue(statementLine.getStatementLine61().getAccountOwnerReference());
+					}
+			        if(statementLine.getAccountOwnerInformation86() != null){
+			        	row.createCell(3).setCellValue(statementLine.getAccountOwnerInformation86().getBranchOperation());
+			        }
 			        
-			        try {
-						Integer reference61 = new Integer(statementLine.getStatementLine61().getAccountOwnerReference());
-						Integer reference86 = new Integer(statementLine.getAccountOwnerInformation86().getBranchOperation());
-						if(reference61.equals(reference86)){
-							row.createCell(4).setCellValue(equal);
-						}else{
-							row.createCell(4).setCellValue(noEqual);
-						}
-					} catch (NumberFormatException e) {
+			        if(statementLine.getStatementLine61() != null && statementLine.getAccountOwnerInformation86() != null && statementLine.getStatementLine61().getAccountOwnerReference().equals(statementLine.getAccountOwnerInformation86().getBranchOperation())){
+						row.createCell(4).setCellValue(equal);
+					}else{
 						row.createCell(4).setCellValue(noEqual);
-						System.out.println("Error to parse reference of the tag 61 or 86.");
 					}
 			        
-				}
+//			        try {
+//						Long reference61 = new Long(statementLine.getStatementLine61().getAccountOwnerReference());
+//						Long reference86 = new Long(statementLine.getAccountOwnerInformation86().getBranchOperation());
+//						if(reference61.equals(reference86)){
+//							row.createCell(4).setCellValue(equal);
+//						}else{
+//							row.createCell(4).setCellValue(noEqual);
+//						}
+//					} catch (NumberFormatException e) {
+//						row.createCell(4).setCellValue(noEqual);
+//						System.out.println("Error to parse reference of the tag 61 or 86.");
+//					}
+			        
+//				}
 			}
 			
 		}
