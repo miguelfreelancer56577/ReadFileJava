@@ -37,7 +37,7 @@ public class SuplementaryDetails99 {
 		this.bankCodeDescription = bankCodeDescription;
 	}
 	
-	private String getStatementBankCode(String bankCode) {
+	public String getStatementBankCode(String bankCode) {
 		if(bankCode==null) return "0";
 		if(bankCode != null && bankCode.trim().equals("1")) return "1";
 		if(bankCode != null && bankCode.trim().equals("2")) return "100";
@@ -93,7 +93,6 @@ public class SuplementaryDetails99 {
 		if(bankCode != null && bankCode.trim().equals("340")) return "504";
 		if(bankCode != null && bankCode.trim().equals("341")) return "520";
 		if(bankCode != null && bankCode.trim().equals("362")) return "6031";
-		if(bankCode != null && bankCode.trim().equals("364")) return "1700";
 		if(bankCode != null && bankCode.trim().equals("364")) return "1700";
 		if(bankCode != null && bankCode.trim().equals("373")) return "6058";
 		if(bankCode != null && bankCode.trim().equals("390")) return "1200";
