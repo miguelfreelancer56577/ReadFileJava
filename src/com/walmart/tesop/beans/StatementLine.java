@@ -88,6 +88,22 @@ public class StatementLine {
 		}
 	}
 	
+	public void validateRerefenceNumeric(){
+		if(!(statementLine61 == null || statementLine61.getAccountOwnerReference().equals("NULL") || statementLine61.getAccountOwnerReference().equals("0000000000"))){
+			String accountOwnerReference = statementLine61.getAccountOwnerReference();
+			accountOwnerReference = accountOwnerReference.replace(StringUtils.cerosIzquierda, "");
+			if(suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("364"))){
+				String branchOperation = accountOwnerInformation86.validateBranchOperation();
+				branchOperation = branchOperation.replace(StringUtils.cerosIzquierda, "");
+				if(!branchOperation.equals(accountOwnerReference)){
+					if(!branchOperation.equals("NULL")){
+						statementLine61.setAccountOwnerReference(branchOperation);
+					}
+				}
+			}
+		}
+	}
+	
 	private boolean isDate(String instRef) {
 		boolean result = false;
 		try {
