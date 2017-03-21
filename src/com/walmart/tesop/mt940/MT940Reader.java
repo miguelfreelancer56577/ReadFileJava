@@ -51,7 +51,7 @@ public class MT940Reader {
 			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_HSBC_20170309"));
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
-			StatementLine statementLine = null; //new StatementLine();
+			StatementLine statementLine = null;
 			
 			trn20.setIsNew(true);
 			int lastTagId = 0;
@@ -64,6 +64,7 @@ public class MT940Reader {
 				if(sCurrentLine == null) {
 					if(statementLine != null) {
 						statementLine.calculateBranchOperation();
+						statementLine.validateRerefenceNumeric();
 						if(statementLine.getAccountOwnerInformation86() != null)
 							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
@@ -88,6 +89,7 @@ public class MT940Reader {
 					if(trn20 != null && trn20.getIsNew() == false) {
 						if(statementLine != null) {
 							statementLine.calculateBranchOperation();
+							statementLine.validateRerefenceNumeric();
 							if(statementLine.getAccountOwnerInformation86() != null)
 								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
@@ -134,6 +136,7 @@ public class MT940Reader {
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
+							statementLine.validateRerefenceNumeric();
 							if(statementLine.getAccountOwnerInformation86() != null)
 								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
@@ -418,7 +421,12 @@ public class MT940Reader {
 								continue;
 							}
 						}
-						sl.setAccountOwnerReference(sbsb.reverse().toString());
+						if(sbsb.toString().equals("")){
+							sl.setAccountOwnerReference("NULL");
+						}else{
+							sl.setAccountOwnerReference(sbsb.reverse().toString());
+						}
+						
 					}
 //					catch (Tag61Exception e) {
 //						e.printStackTrace();

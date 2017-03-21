@@ -2,6 +2,15 @@ package com.walmart.tesop.beans;
 
 import java.math.BigDecimal;
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  InsertMovementMt940
+ * Class description: Clase con los atributos para insertar información en la tabla 'informix'.MOVEMENT del reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class InsertMovementMt940 {
 	
 	private String account_number;

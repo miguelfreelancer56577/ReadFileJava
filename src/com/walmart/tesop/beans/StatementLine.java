@@ -5,6 +5,15 @@ import com.walmart.tesop.util.StringUtils;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+/**
+ * Operative Treasury - TESOP
+ * WalMart Mexico y Centroamerica
+ * Class name: 		  StatementLine
+ * Class description: Contiene los atributos de un movimiento en el reporte MT940.
+ * Last Modification: 15/11/2016
+ * Last Date:         15/11/2016
+ */
+
 public class StatementLine {
 
 	private StatementLine61 statementLine61;
@@ -75,6 +84,23 @@ public class StatementLine {
 				this.setBranchOperation(this.getStatementLine61().getInstitutionReference().substring(4, 8));
 			} else {
 				this.setBranchOperation("0870");
+			}
+		}
+	}
+	
+	public void validateRerefenceNumeric(){
+		if(!(statementLine61 == null || statementLine61.getAccountOwnerReference().equals("NULL") || statementLine61.getAccountOwnerReference().equals("0000000000"))){
+			String accountOwnerReference = statementLine61.getAccountOwnerReference();
+			accountOwnerReference = accountOwnerReference.replace(StringUtils.cerosIzquierda, "");
+			if(suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("364")) ||
+			   suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("425"))){
+				String branchOperation = accountOwnerInformation86.validateBranchOperation();
+				branchOperation = branchOperation.replace(StringUtils.cerosIzquierda, "");
+				if(!branchOperation.equals(accountOwnerReference)){
+					if(!branchOperation.equals("NULL")){
+						statementLine61.setAccountOwnerReference(branchOperation);
+					}
+				}
 			}
 		}
 	}
