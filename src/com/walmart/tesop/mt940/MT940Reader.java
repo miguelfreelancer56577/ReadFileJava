@@ -64,17 +64,17 @@ public class MT940Reader {
 				sCurrentLine = br.readLine();
 				
 				if(sCurrentLine == null) {
-					if(statementLine != null) {
+					if(statementLine != null && statementLine.isThereStatementLine61()) {
 						statementLine.calculateBranchOperation();
 						statementLine.validateRerefenceNumeric();
 						if(statementLine.getAccountOwnerInformation86() != null)
 							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
-						objList.add(trn20);
 						System.out.println("Fin de archivo | objList.size: " + objList.size());
-						return objList;
 					}
+					objList.add(trn20);
+					return objList;
 				}
 				
 				if(sCurrentLine == null || sCurrentLine.trim().equalsIgnoreCase(""))
@@ -89,7 +89,7 @@ public class MT940Reader {
 				
 				if(tagId == 20) {
 					if(trn20 != null && trn20.getIsNew() == false) {
-						if(statementLine != null) {
+						if(statementLine != null  && statementLine.isThereStatementLine61()) {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
 							if(statementLine.getAccountOwnerInformation86() != null)
@@ -97,8 +97,8 @@ public class MT940Reader {
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
-							objList.add(trn20);
 						}
+						objList.add(trn20);
 					}
 					
 					trn20 = new TransactionReferenceNumber20();
