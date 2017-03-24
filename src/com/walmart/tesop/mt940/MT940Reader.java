@@ -72,6 +72,8 @@ public class MT940Reader {
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
 						System.out.println("Fin de archivo | objList.size: " + objList.size());
+					}else{
+						statementLine = null;
 					}
 					objList.add(trn20);
 					return objList;
@@ -97,6 +99,8 @@ public class MT940Reader {
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
+						}else{
+							statementLine = null;
 						}
 						objList.add(trn20);
 					}
