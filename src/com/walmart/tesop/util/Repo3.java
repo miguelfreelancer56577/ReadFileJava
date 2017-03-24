@@ -10,7 +10,7 @@ import com.walmart.tesop.beans.StatementLine;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 
 public class Repo3 extends WorkBookXls {
-
+	
 	public Repo3(String pathName) throws IOException {
 		super(pathName);
 	}
@@ -19,54 +19,26 @@ public class Repo3 extends WorkBookXls {
 	protected void createHeadInXls() {
 		HSSFRow rowhead = sheet.createRow((short)0);
 		rowhead.createCell(0).setCellValue("Account");
-		rowhead.createCell(1).setCellValue("Transaction");
-        rowhead.createCell(2).setCellValue("RefNum61");
-        rowhead.createCell(3).setCellValue("RefNum86");
-        rowhead.createCell(4).setCellValue("Comparison");
+        rowhead.createCell(1).setCellValue("Currency Code");
+        rowhead.createCell(2).setCellValue("It has movements");
+        rowhead.createCell(3).setCellValue("Number of movements");
 	}
 
 	@Override
 	protected void creteRowInXls(TransactionReferenceNumber20 trn20, int numRow) {
 		
-		String account = trn20.getAccountIdentification25();
-		
+		HSSFRow row = sheet.createRow((short)numRow);
+		row.createCell(0).setCellValue(trn20.getAccountIdentification25());
+        row.createCell(1).setCellValue(trn20.getOpeningBalance60().getCurrencyCode());
+        row.createCell(2).setCellValue("no");
+        row.createCell(3).setCellValue(0);
+        
 		List<StatementLine> statementLineList = trn20.getStatementLineList();
 		
-		String equal = "they are equals";
-		String noEqual = "they aren't equals";
-		
-		if(statementLineList != null){
-			
-			HSSFRow row = sheet.createRow((short)numRow);
-			
-			for (StatementLine statementLine : statementLineList) {
-				
-				if(statementLine.getSuplementaryDetails99() != null && statementLine.getSuplementaryDetails99().getBankCode() != null && statementLine.getSuplementaryDetails99().getBankCode().trim().equals("7104")){
-					
-					row.createCell(0).setCellValue(account);
-					row.createCell(1).setCellValue("425");
-			        row.createCell(2).setCellValue(statementLine.getStatementLine61().getAccountOwnerReference());
-			        row.createCell(3).setCellValue(statementLine.getAccountOwnerInformation86().getBranchOperation());
-			        
-			        try {
-						Integer reference61 = new Integer(statementLine.getStatementLine61().getAccountOwnerReference());
-						Integer reference86 = new Integer(statementLine.getAccountOwnerInformation86().getBranchOperation());
-						if(reference61.equals(reference86)){
-							row.createCell(4).setCellValue(equal);
-						}else{
-							row.createCell(4).setCellValue(noEqual);
-						}
-					} catch (NumberFormatException e) {
-						row.createCell(4).setCellValue(noEqual);
-						System.out.println("Error to parse reference of the tag 61 or 86.");
-					}
-			        
-				}
-			}
-			
+		if(statementLineList != null && statementLineList.size() > 0){
+			row.createCell(2).setCellValue("yes");
+	        row.createCell(3).setCellValue(statementLineList.size());
 		}
-		
-		
 		
 	}
 
