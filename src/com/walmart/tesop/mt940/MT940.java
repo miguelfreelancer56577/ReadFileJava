@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import com.walmart.tesop.util.Repo1;
 import com.walmart.tesop.util.Repo2;
 import com.walmart.tesop.util.Repo3;
+import com.walmart.tesop.util.ReviewOtherBanks;
 import com.walmart.tesop.util.StringUtils;
 import com.walmart.tesop.util.WorkBookXls;
 import com.walmart.tesop.beans.StatementLine;
@@ -59,7 +60,7 @@ public class MT940 {
 				xlsFileName.append(currentMt940.getName());
 				xlsFileName.append(".xls");
 				
-				WorkBookXls repo = new Repo3(xlsFileName.toString());
+				WorkBookXls repo = new ReviewOtherBanks(xlsFileName.toString());
 				repo.setSheetName(currentMt940.getName());
 //				repo.setCellHeadName("Accounts");
 				repo.createBodyXls(objList);
