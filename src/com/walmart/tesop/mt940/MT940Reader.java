@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 import com.walmart.tesop.util.StringUtils;
 import com.walmart.tesop.beans.OpeningBalance60F;
@@ -452,6 +453,25 @@ public class MT940Reader {
 //						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
 					}
 					
+//					These lines validate if the reference number has a date and it's true then I set it to null 
+					
+						String firtsDateMatch = sl.getValueDate();
+						
+						StringBuilder secondDateMatch = new StringBuilder();
+						secondDateMatch.insert(2, secondDateMatch.substring(4));
+						secondDateMatch.delete(6, secondDateMatch.length());
+
+						StringBuilder regExp = new StringBuilder();
+						regExp.append(firtsDateMatch);
+						regExp.append("|");
+						regExp.append(secondDateMatch);
+						
+						Matcher matcher = StringUtils.findPattern(regExp.toString(), sl.getAccountOwnerReference());
+						
+						if(matcher.find()){
+							sl.setAccountOwnerReference("NULL");
+						}
+						
 					lastReference.setLastReference(sl.getAccountOwnerReference());
 					sl.setInheritedReference("NULL");
 					
