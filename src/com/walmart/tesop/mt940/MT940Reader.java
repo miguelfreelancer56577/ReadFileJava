@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -430,6 +431,7 @@ public class MT940Reader {
 						}
 						if(sbsb.toString().equals("")){
 							sl.setAccountOwnerReference("NULL");
+							sl.setInheritedReference(lastReference.getLastReference());
 						}else{
 							sl.setAccountOwnerReference(sbsb.reverse().toString());
 						}
@@ -454,26 +456,16 @@ public class MT940Reader {
 					}
 					
 //					These lines validate if the reference number has a date and it's true then I set it to null 
-					
-						String firtsDateMatch = sl.getValueDate();
 						
-						StringBuilder secondDateMatch = new StringBuilder();
-						secondDateMatch.insert(2, secondDateMatch.substring(4));
-						secondDateMatch.delete(6, secondDateMatch.length());
-
-						StringBuilder regExp = new StringBuilder();
-						regExp.append(firtsDateMatch);
-						regExp.append("|");
-						regExp.append(secondDateMatch);
-						
-						Matcher matcher = StringUtils.findPattern(regExp.toString(), sl.getAccountOwnerReference());
+						Matcher matcher = StringUtils.findPattern(StringUtils.expDate(sl.getValueDate()) , sl.getAccountOwnerReference());
 						
 						if(matcher.find()){
 							sl.setAccountOwnerReference("NULL");
+							sl.setInheritedReference(lastReference.getLastReference());
+						}else{
+							lastReference.setLastReference(sl.getAccountOwnerReference());
+							sl.setInheritedReference("NULL");
 						}
-						
-					lastReference.setLastReference(sl.getAccountOwnerReference());
-					sl.setInheritedReference("NULL");
 					
 //					sl.setAccountOwnerReference(value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length()));
 //					lastReference.setLastReference(sl.getAccountOwnerReference());

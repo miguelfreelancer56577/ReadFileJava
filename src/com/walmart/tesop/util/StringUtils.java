@@ -6,10 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +59,22 @@ public class StringUtils {
 	 * @param regex
 	 * @param input
 	 * @return matcher
+	 * @throws ParseException 
 	 */
+	
+//	valida si contiene la fecha al inicio en los formatos yyyyddMM y yyyyMMdd deacuerdo al anio	
+	public static String expDate(String date){
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyMMdd");
+		Calendar cal = Calendar.getInstance();
+		String string = "^(year)([3][0-1]|[0-2]\\d{1})([0][1-9]|[1][0-2])$|^(year)([0][1-9]|[1][0-2])([3][0-1]|[0-2]\\d{1})";
+		try {
+			cal.setTime(dateFormatter.parse(date));
+			return string.replaceAll("year", String.valueOf(cal.get(Calendar.YEAR)));
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+	
 	public static final Matcher findPattern(String regex, String input){
 		pattern = Pattern.compile(regex);
 	    matcher = pattern.matcher(input);
