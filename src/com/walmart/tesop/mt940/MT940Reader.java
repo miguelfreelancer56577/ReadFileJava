@@ -405,7 +405,11 @@ public class MT940Reader {
 //					the Method no setter the Entry Reason because It assume that is not Found Code
 //					if it is into here, it has the third character currency code.
 //					Assign null because not have two character "N", throw an Exception
-					sl.setEntryReason(value.split("N")[2].substring(0, 3));
+					if(sl.getFoundsCode().equals("D")){
+						sl.setEntryReason(value.split("N")[1].substring(0, 3));
+					}else{
+						sl.setEntryReason(value.split("N")[2].substring(0, 3));
+					}
 				}
 			} catch(Exception e) {
 //				Assign "INT" by default 
