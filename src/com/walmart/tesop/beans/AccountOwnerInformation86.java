@@ -21,12 +21,7 @@ public class AccountOwnerInformation86 {
 	private String branchOperation;
 	private String reference;
 	private String totalAmount;
-	private String[] skipWords;
 	
-	public AccountOwnerInformation86() {
-		super();
-		skipWords = new String[]{"NONREF"};
-	}
 	public String getProductTypeId() {
 		return productTypeId;
 	}
@@ -68,31 +63,6 @@ public class AccountOwnerInformation86 {
 			ex.printStackTrace();
 		}
 		return "NULL";
-	}
-	
-	public void validateCurrency(String currencyCode, String bankCode){
-		final String currencyMxn = "MXN";
-		final String currencyUsd = "USD";
-		String[] arrayBankCode = new String[]{"7104","879","878"};
-		Arrays.sort(arrayBankCode);
-		if (currencyCode.trim().equals(currencyUsd)){
-			if(Arrays.binarySearch(arrayBankCode, bankCode) >= 0){
-				Matcher m = StringUtils.findPattern(StringUtils.refeIntoDescTag86, reference);
-				if(m.find() == true){
-					branchOperation = m.group(0).replaceAll(StringUtils.hasTwoSpaces, "");
-					branchOperation = branchOperation.replaceAll("REF:", "").trim();
-//					branchOperation = branchOperation.trim();
-				}
-			}
-		}
-//			suplementaryDetails99.getBankCode() 
-		reference = reference.replaceAll(StringUtils.hasTwoSpaces, "").replaceAll(StringUtils.refeIntoDescTag86,  " ");
-		for (String word : skipWords) {
-			reference = reference.replace(word, "");
-		}
-		reference = StringUtils.rPadAlphanumericReference(reference, 20);
-//		reference = statementLine.getAccountOwnerInformation86().getReference();
-//		StringUtils.rPadAlphanumericReference(statementLine.getAccountOwnerInformation86().getReference(), 20);
 	}
 	
 }

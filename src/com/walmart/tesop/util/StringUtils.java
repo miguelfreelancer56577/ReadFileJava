@@ -53,6 +53,8 @@ public class StringUtils {
 	public static final String refeIntoDescTag86 = "REF:\\s{0,}\\d{1,16}";
 //	valida si cuenta con ceros a la izquierda
 	public static final String cerosIzquierda = "^0{1,}";
+//	array de palabras que se deben de omitir en la referencia alfanumerica del tag 86  
+	public static final String[] skipWords = new String[]{"NONREF"};
 	
 	/**
 	 * This method receives two String, the first contents the regular expression and the second contents the concurrent string to match 
