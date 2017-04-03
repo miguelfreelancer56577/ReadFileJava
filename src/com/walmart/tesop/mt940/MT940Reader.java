@@ -67,8 +67,6 @@ public class MT940Reader {
 					if(statementLine != null && statementLine.isThereStatementLine61()) {
 						statementLine.calculateBranchOperation();
 						statementLine.validateRerefenceNumeric();
-						if(statementLine.getAccountOwnerInformation86() != null)
-							statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 						trn20.getStatementLineList().add(statementLine);
 						trn20.calculateTotals();
 						System.out.println("Fin de archivo | objList.size: " + objList.size());
@@ -94,8 +92,6 @@ public class MT940Reader {
 						if(statementLine != null  && statementLine.isThereStatementLine61()) {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
-							if(statementLine.getAccountOwnerInformation86() != null)
-								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 							trn20.calculateTotals();
@@ -143,8 +139,6 @@ public class MT940Reader {
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
-							if(statementLine.getAccountOwnerInformation86() != null)
-								statementLine.getAccountOwnerInformation86().validateCurrency(trn20.getOpeningBalance60().getCurrencyCode(), statementLine.getSuplementaryDetails99().getBankCode());
 							trn20.getStatementLineList().add(statementLine);
 							statementLine = new StatementLine();
 					}
@@ -181,7 +175,6 @@ public class MT940Reader {
 					if(statementLine.isThereAccountOwnerInformation86() == true) {
 						reference = statementLine.getAccountOwnerInformation86().getReference();
 						reference = new StringBuilder().append(reference).append(value).toString();
-//						statementLine.getAccountOwnerInformation86().setReference(StringUtils.rPadAlphanumericReference(reference, 20));
 						statementLine.getAccountOwnerInformation86().setReference(reference);
 					}
 						
@@ -311,35 +304,12 @@ public class MT940Reader {
 			}
 			
 			try { 
-//				String[] values = value.split("/")[4].split("     ");
-//				String[] values = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").split(" ");
-//				if(numberSlash > 4){
-//					String alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ");
-//				}
 				
 				String alpRef = "";
 				
-				alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
+				alpRef  = value.split("/")[4].replaceAll(StringUtils.hasTwoSpaces, " ").replaceAll(StringUtils.refeAtfirstIntoDescTag86, "").trim();
 				
-				alpRef  = alpRef.replaceAll(StringUtils.refeAtfirstIntoDescTag86, "");
-//	    		String alpRef = values[values.length-1];
-//	    		StringBuilder sb = new StringBuilder("");
-//	    		boolean initialSpace = true;
-//	    		
-//	    		if(values != null && !StringUtils.isNumber(alpRef)) {
-//	    			for(int index = 0; index < alpRef.length(); index++) {
-//	    				if(String.valueOf(alpRef.charAt(index)).equals(StringUtils.space) && initialSpace == true) {
-//	    					continue;
-//	    				} else {
-//	    					sb.append(String.valueOf(alpRef.charAt(index)));
-//	    					initialSpace = false;
-//	    				}
-//	    			}
-//	    		} else {
-//	    			sb.append(StringUtils.rPadAlphanumericReference(alpRef.trim(), 20));
-//	    		}
-	    		
-	    		aoi.setReference(alpRef.trim());
+	    		aoi.setReference(alpRef);
 				
 			} catch(Exception ex2) { aoi.setReference(""); }
 		
@@ -422,15 +392,20 @@ public class MT940Reader {
 						String substring = value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length());
 						StringBuilder sbsb = new StringBuilder("");
 						
-						for(int i = substring.length()-1; i >= 0; i--) {
+						if(StringUtils.isNumber(substring)){
 							
-							if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
-								sbsb.append(String.valueOf(substring.charAt(i)));
-							} else {
-//								throw new Tag61Exception("tag: " + value);
-								continue;
+							for(int i = substring.length()-1; i >= 0; i--) {
+								
+								if(StringUtils.isNumber(String.valueOf(substring.charAt(i)))) {
+									sbsb.append(String.valueOf(substring.charAt(i)));
+								} else {
+//									throw new Tag61Exception("tag: " + value);
+									continue;
+								}
 							}
+							
 						}
+						
 						if(sbsb.toString().equals("")){
 							sl.setAccountOwnerReference("NULL");
 							sl.setInheritedReference(lastReference.getLastReference());
@@ -439,12 +414,7 @@ public class MT940Reader {
 						}
 						
 					}
-//					catch (Tag61Exception e) {
-//						e.printStackTrace();
-////						System.exit(0);
-//					} 
 					catch (Exception e) {
-//						System.out.println("tag: " + value);
 						String substring = value.split("N")[1].split("//")[0];
 						substring = substring.substring(3, substring.length());
 						if(StringUtils.isNumber(substring)){
@@ -452,9 +422,6 @@ public class MT940Reader {
 						}else{
 							sl.setAccountOwnerReference("NULL");
 						}
-//						System.out.println("sub-field: " + substring);
-//						cleans up
-//						System.out.println("accountOwnerReference: " + sl.getAccountOwnerReference() + "\n--------------------------------");
 					}
 					
 //					These lines validate if the reference number has a date and it's true then I set it to null 
@@ -469,10 +436,6 @@ public class MT940Reader {
 							sl.setInheritedReference("NULL");
 						}
 					
-//					sl.setAccountOwnerReference(value.split("N")[2].split("//")[0].substring(3, value.split("N")[2].split("//")[0].length()));
-//					lastReference.setLastReference(sl.getAccountOwnerReference());
-//					sl.setInheritedReference("NULL");
-//					System.out.println("getStatementLineObj.lastRef = " + lastReference.getLastReference());
 				}
 			} catch(Exception exs) {
 				sl.setAccountOwnerReference(lastReference.getLastReference());
