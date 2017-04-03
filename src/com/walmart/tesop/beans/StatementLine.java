@@ -3,6 +3,7 @@ package com.walmart.tesop.beans;
 import com.walmart.tesop.util.StringUtils;
 
 import java.util.Date;
+import java.util.regex.Matcher;
 import java.text.SimpleDateFormat;
 
 /**
@@ -89,20 +90,48 @@ public class StatementLine {
 	}
 	
 	public void validateRerefenceNumeric(){
-		if(!(statementLine61 == null || statementLine61.getAccountOwnerReference().equals("NULL") || statementLine61.getAccountOwnerReference().equals("0000000000"))){
-			String accountOwnerReference = statementLine61.getAccountOwnerReference();
-			accountOwnerReference = accountOwnerReference.replace(StringUtils.cerosIzquierda, "");
-			if(suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("364")) ||
-			   suplementaryDetails99.getBankCode().equals(suplementaryDetails99.getStatementBankCode("425"))){
-				String branchOperation = accountOwnerInformation86.validateBranchOperation();
-				branchOperation = branchOperation.replace(StringUtils.cerosIzquierda, "");
-				if(!branchOperation.equals(accountOwnerReference)){
-					if(!branchOperation.equals("NULL")){
-						statementLine61.setAccountOwnerReference(branchOperation);
-					}
-				}
-			}
+		
+		/*
+		 * it validates the reference number into tag 86
+		 */
+		
+		String referenceAlphanumeric = "";
+		
+		Matcher m = StringUtils.findPattern(StringUtils.refeIntoDescTag86, accountOwnerInformation86.getReference());
+		
+		if(m.find() == true){
+			
+//			it removes all spaces between REF: and the reference numeric  
+			referenceAlphanumeric = m.group(0).replaceAll(StringUtils.hasTwoSpaces, "");
+			
+//			it removes the word REF: 
+			referenceAlphanumeric  = referenceAlphanumeric.replaceAll("REF:", "").trim();
+			
+//			it sets the value of the correct reference numeric  
+			accountOwnerInformation86.setBranchOperation(referenceAlphanumeric);
+			
+//			it sets the value of reference numeric into tag 61 in null  
+			statementLine61.setAccountOwnerReference("NULL");
+			
 		}
+		
+		/*
+		 * it cleans the reference alphanumeric into tag 68
+		 */
+		
+		referenceAlphanumeric = accountOwnerInformation86.getReference();
+		
+//		it removes each two spaces between each word, then replace the content of the following string REF: 0000000000 for space empty
+		referenceAlphanumeric = referenceAlphanumeric.replaceAll(StringUtils.refeIntoDescTag86,  " ").replaceAll(StringUtils.hasTwoSpaces, " ");
+		
+//		it replaces each unnecessary words into the reference alphanumeric
+		for (String word : StringUtils.skipWords) {
+			referenceAlphanumeric = referenceAlphanumeric.replace(word, "");
+		}
+		
+//		it sets the new reference into of the tag 86
+		accountOwnerInformation86.setReference(StringUtils.rPadAlphanumericReference(referenceAlphanumeric, 20));
+		
 	}
 	
 	private boolean isDate(String instRef) {
