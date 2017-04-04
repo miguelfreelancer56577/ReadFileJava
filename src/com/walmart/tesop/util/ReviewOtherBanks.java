@@ -3,6 +3,7 @@ package com.walmart.tesop.util;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
@@ -60,6 +61,7 @@ public class ReviewOtherBanks extends WorkBookXls {
         rowhead.createCell(31).setCellValue("tag86-branchOperation");
         rowhead.createCell(32).setCellValue("tag86-reference");
         rowhead.createCell(33).setCellValue("tag86-totalAmount");
+        rowhead.createCell(34).setCellValue("equals reference");
         
         
 	}
@@ -111,7 +113,17 @@ public class ReviewOtherBanks extends WorkBookXls {
                 rowhead.createCell(31).setCellValue(tag86.getBranchOperation());
                 rowhead.createCell(32).setCellValue(tag86.getReference());
                 rowhead.createCell(33).setCellValue(tag86.getTotalAmount());
-        		
+                rowhead.createCell(34).setCellValue("no");
+                
+                String reference61 = tag61.getAccountOwnerReference();
+                String reference86 = tag86.getBranchOperation();
+                
+                Matcher m = StringUtils.findPattern(reference86+"$", reference61);
+                
+                if(reference61.equals(reference86) || m.find() == true){
+                	rowhead.createCell(34).setCellValue("si");
+                }
+                
     		}
         	
         }else{
