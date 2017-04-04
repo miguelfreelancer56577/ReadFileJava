@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+import com.walmart.tesop.util.ReviewOtherBanks;
 import com.walmart.tesop.util.StringUtils;
+import com.walmart.tesop.util.Tag86;
+import com.walmart.tesop.util.WorkBookXls;
 import com.walmart.tesop.beans.OpeningBalance60F;
 import com.walmart.tesop.beans.ClosingBalance62F;
 import com.walmart.tesop.beans.ClosingAvailableBalance64;
@@ -46,8 +49,21 @@ public class MT940Reader {
 		boolean success = false;
 		BufferedReader br = null;
 		List<TransactionReferenceNumber20> objList = new ArrayList<TransactionReferenceNumber20>(1);
+		
+		StringBuilder xlsFileName = new StringBuilder("C:\\Users\\vn0x53q\\workspaceKepler\\reports\\");
+		xlsFileName.append(nameMt940.getName());
+		xlsFileName.append("_tag86");
+		xlsFileName.append(".xls");
+		
+		Tag86 repo = null;
+		
+		List<String> movementsTag86 = new ArrayList<String>();
 
 		try {
+			
+			repo = new Tag86(xlsFileName.toString());
+			repo.setSheetName(nameMt940.getName());
+			
 			String sCurrentLine;
 			String value;
 			String reference;
@@ -163,7 +179,8 @@ public class MT940Reader {
 				}
 				
 				if(tagId == 86) {
-					value = sCurrentLine.substring(0, sCurrentLine.length());		
+					value = sCurrentLine.substring(0, sCurrentLine.length());
+					movementsTag86.add(value);
 					AccountOwnerInformation86 accountOwnerInformation86 = this.getAccountOwnerInformationObj(value);
 					statementLine.setAccountOwnerInformation86(accountOwnerInformation86);
 					statementLine.setThereAccountOwnerInformation86(true);
@@ -224,6 +241,10 @@ public class MT940Reader {
 				ex.printStackTrace();
 //				return objList;
 			}
+			
+			repo.createBodyTag(movementsTag86);
+			repo.createFileXls();
+
 		}
 		
 	    return objList;

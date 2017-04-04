@@ -56,16 +56,6 @@ public class MT940 {
 				
 				System.out.println("objList: " + objList.size());
 				
-				StringBuilder xlsFileName = new StringBuilder("C:\\Users\\vn0x53q\\workspaceKepler\\reports\\");
-				xlsFileName.append(currentMt940.getName());
-				xlsFileName.append(".xls");
-				
-				WorkBookXls repo = new ReviewOtherBanks(xlsFileName.toString());
-				repo.setSheetName(currentMt940.getName());
-//				repo.setCellHeadName("Accounts");
-				repo.createBodyXls(objList);
-				repo.createFileXls();
-				
 				for(TransactionReferenceNumber20 trn20 : objList) {
 					
 					ab = new UpdateAccountBalanceMt940();
