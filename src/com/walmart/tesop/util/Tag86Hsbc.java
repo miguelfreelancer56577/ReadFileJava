@@ -17,11 +17,11 @@ import com.walmart.tesop.beans.StatementLine61;
 import com.walmart.tesop.beans.SuplementaryDetails99;
 import com.walmart.tesop.beans.TransactionReferenceNumber20;
 
-public class Tag86Banorte extends WorkBookXls {
+public class Tag86Hsbc extends WorkBookXls {
 	
 	public int numRow = 1;
 
-	public Tag86Banorte(String pathName) throws IOException {
+	public Tag86Hsbc(String pathName) throws IOException {
 		super(pathName);
 	}
 	
@@ -56,6 +56,7 @@ public class Tag86Banorte extends WorkBookXls {
 			rowhead.createCell(2).setCellValue("si");
 		
 //		Expression has to validate if the tag 86 contains the possible reference number
+//		String expBancomer = "(B[ANCOMER]{2,7}\\s?\\d+)|(RECIBIDO\\D*\\d{1,})|(B[ANCOS]{1,5}\\s*\\d+)|(TERCERO\\D*\\d+)|(CE\\d+)|(CB\\d+)";
 		String expBanorte = "(REFERENCIA:\\D*\\d+)|(\\d+\\s+REFERENCIA)|((REF.|REF)\\s+\\d+)|(REFERENCIA CLIENTE\\s+\\d+)";
 		
 		matcher = StringUtils.findPattern(expBanorte, valTag86);
@@ -65,6 +66,11 @@ public class Tag86Banorte extends WorkBookXls {
 			group = group.replaceAll("\\D", "");
 			rowhead.createCell(3).setCellValue(group);
 		}
+			
+		
+//		for (String string : fragmentTag86) {
+//			rowhead.createCell(contCells++).setCellValue(string);
+//		}
 		
 	}
 	
