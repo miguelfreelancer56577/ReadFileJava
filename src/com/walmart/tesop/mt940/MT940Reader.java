@@ -1,6 +1,7 @@
 package com.walmart.tesop.mt940;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Calendar;
@@ -50,7 +51,14 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
-			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201703130904"));
+			
+			String pathIn = "C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_HSBC_20170322";
+			
+			File concurrentFile = new File(pathIn);
+			
+			br = new BufferedReader(new FileReader(concurrentFile));
+			
+			String nameConcurrentFile = concurrentFile.getName();
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null;
@@ -93,7 +101,7 @@ public class MT940Reader {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
 							trn20.getStatementLineList().add(statementLine);
-							statementLine = new StatementLine();
+							statementLine = StatementLine.getInstance(nameConcurrentFile);
 							trn20.calculateTotals();
 						}else{
 							statementLine = null;
@@ -133,14 +141,14 @@ public class MT940Reader {
 				
 				if(tagId == 61) {
 					if(statementLine == null) {
-						statementLine = new StatementLine();
+						statementLine = StatementLine.getInstance(nameConcurrentFile);
 					} else if(statementLine.isThereStatementLine61() || 
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
 							trn20.getStatementLineList().add(statementLine);
-							statementLine = new StatementLine();
+							statementLine = StatementLine.getInstance(nameConcurrentFile);
 					}
 					
 					value = sCurrentLine.substring(4, sCurrentLine.length());
