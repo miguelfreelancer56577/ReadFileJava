@@ -51,8 +51,11 @@ public class MT940Reader {
 			String sCurrentLine;
 			String value;
 			String reference;
+			
 //			br = new BufferedReader(new FileReader("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_CITIBANAMEX_201703070806"));
 			br = new BufferedReader(new FileReader(nameMt940));
+
+			String nameConcurrentFile = nameMt940.getName();
 			
 			TransactionReferenceNumber20 trn20 = new TransactionReferenceNumber20();
 			StatementLine statementLine = null;
@@ -95,7 +98,7 @@ public class MT940Reader {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
 							trn20.getStatementLineList().add(statementLine);
-							statementLine = new StatementLine();
+							statementLine = StatementLine.getInstance(nameConcurrentFile);
 							trn20.calculateTotals();
 						}else{
 							statementLine = null;
@@ -135,14 +138,14 @@ public class MT940Reader {
 				
 				if(tagId == 61) {
 					if(statementLine == null) {
-						statementLine = new StatementLine();
+						statementLine = StatementLine.getInstance(nameConcurrentFile);
 					} else if(statementLine.isThereStatementLine61() || 
 							statementLine.isThereSuplementaryDetails99() || 
 							statementLine.isThereAccountOwnerInformation86()) {
 							statementLine.calculateBranchOperation();
 							statementLine.validateRerefenceNumeric();
 							trn20.getStatementLineList().add(statementLine);
-							statementLine = new StatementLine();
+							statementLine = StatementLine.getInstance(nameConcurrentFile);
 					}
 					
 					value = sCurrentLine.substring(4, sCurrentLine.length());

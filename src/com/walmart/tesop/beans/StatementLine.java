@@ -15,15 +15,15 @@ import java.text.SimpleDateFormat;
  * Last Date:         15/11/2016
  */
 
-public class StatementLine {
+public abstract class StatementLine {
 
-	private StatementLine61 statementLine61;
-	private SuplementaryDetails99 suplementaryDetails99;
-	private AccountOwnerInformation86 accountOwnerInformation86;
-	private boolean isThereStatementLine61;
-	private boolean isThereSuplementaryDetails99;
-	private boolean isThereAccountOwnerInformation86;
-	private String branchOperation;
+	protected StatementLine61 statementLine61;
+	protected SuplementaryDetails99 suplementaryDetails99;
+	protected AccountOwnerInformation86 accountOwnerInformation86;
+	protected boolean isThereStatementLine61;
+	protected boolean isThereSuplementaryDetails99;
+	protected boolean isThereAccountOwnerInformation86;
+	protected String branchOperation;
 	
 	public StatementLine() {
 		super();
@@ -89,42 +89,50 @@ public class StatementLine {
 		}
 	}
 	
-	public void validateRerefenceNumeric(){
+	public abstract void validateRerefenceNumeric();
+	
+	/**
+	 * This function validate the type of document which it can read 
+	 * @param nameMt940
+	 * @return statementLine
+	 */
+	public static StatementLine getInstance(String nameMt940){
 		
-		/*
-		 * it validates the reference number into tag 86
-		 */
+		StatementLine statementLine = null;
 		
-		String referenceAlphanumeric = "";
+		if(nameMt940.contains("MT940_CITIBANAMEX_")){
+			statementLine = new StatementLineBanamex();
+		}else if (nameMt940.contains("MT940_BANCOMER_")){
+			statementLine = new StatementLineBancomer();
+		}else if (nameMt940.contains("MT940_BANORTE_")){
+			statementLine = new StatementLineBanorte();
+		}else if (nameMt940.contains("MT940_HSBC_")){
+			statementLine = new StatementLineHsbc();
+		}
 		
-		Matcher m = StringUtils.findPattern(StringUtils.refeIntoDescTag86, accountOwnerInformation86.getReference());
+		return statementLine;
+	}
+	
+	/*
+	 * it cleans the reference alphanumeric into tag 68
+	 */
+	public void toCleanRefAlpha(String regExpRefAlpha){
 		
-		if(m.find() == true){
+		String referenceAlphanumeric = accountOwnerInformation86.getReference();
+		
+		try {
 			
-//			it removes all spaces between REF: and the reference numeric  
-			referenceAlphanumeric = m.group(0).replaceAll(StringUtils.hasTwoSpaces, "");
+			//		it removes each two spaces between each word, then replace the content of the reference numeric with the concurrent pattern
+			referenceAlphanumeric = referenceAlphanumeric.replaceAll(regExpRefAlpha, " ").replaceAll(StringUtils.hasTwoSpaces, " ");
 			
-//			it removes the word REF: 
-			referenceAlphanumeric  = referenceAlphanumeric.replaceAll("REF:", "").trim();
+		} catch (Exception e) {
 			
-//			it sets the value of the correct reference numeric  
-			accountOwnerInformation86.setBranchOperation(referenceAlphanumeric);
-			
-//			it sets the value of reference numeric into tag 61 in null  
-			statementLine61.setAccountOwnerReference("NULL");
+//			if the pattern is null just cleans the string
+			referenceAlphanumeric = referenceAlphanumeric.replaceAll(StringUtils.hasTwoSpaces, " ");
 			
 		}
 		
-		/*
-		 * it cleans the reference alphanumeric into tag 68
-		 */
-		
-		referenceAlphanumeric = accountOwnerInformation86.getReference();
-		
-//		it removes each two spaces between each word, then replace the content of the following string REF: 0000000000 for space empty
-		referenceAlphanumeric = referenceAlphanumeric.replaceAll(StringUtils.refeIntoDescTag86,  " ").replaceAll(StringUtils.hasTwoSpaces, " ");
-		
-//		it replaces each unnecessary words into the reference alphanumeric
+		//		it replaces each unnecessary words into the reference alphanumeric
 		for (String word : StringUtils.skipWords) {
 			referenceAlphanumeric = referenceAlphanumeric.replace(word, "");
 		}
@@ -134,7 +142,7 @@ public class StatementLine {
 		
 	}
 	
-	private boolean isDate(String instRef) {
+	public boolean isDate(String instRef) {
 		boolean result = false;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("YYMMDD");
@@ -154,7 +162,7 @@ public class StatementLine {
 		return result;
 	}
 	
-	private boolean isAccount(String instRef) {
+	public boolean isAccount(String instRef) {
 		boolean result = false;
 		try {			
 			if(instRef != null && instRef.length() > 10 && instRef.substring(0, 4).equals("0000")) {

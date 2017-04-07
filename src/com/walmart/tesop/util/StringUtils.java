@@ -55,6 +55,10 @@ public class StringUtils {
 	public static final String cerosIzquierda = "^0{1,}";
 //	array de palabras que se deben de omitir en la referencia alfanumerica del tag 86  
 	public static final String[] skipWords = new String[]{"NONREF"};
+//	this expression validates if the reference alphanumeric has reference numeric for Bancomer
+	public static final String refeTag86Bancomer = "(B[ANCOMER]{2,7}\\s?\\d+)|(RECIBIDO\\D*\\d{1,})|(B[ANCOS]{1,5}\\s*\\d+)|(TERCERO\\D*\\d+)|(CE\\d+)|(CB\\d+)";
+//	this expression validates if the reference alphanumeric has reference numeric for Banorte
+	public static final String refeTag86Banorte = "(REFERENCIA:\\D*\\d+)|(\\d+\\s+REFERENCIA)|((REF.|REF)\\s+\\d+)|(REFERENCIA CLIENTE\\s+\\d+)";
 	
 	/**
 	 * This method receives two String, the first contents the regular expression and the second contents the concurrent string to match 
