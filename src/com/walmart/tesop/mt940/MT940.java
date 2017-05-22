@@ -3,6 +3,9 @@ package com.walmart.tesop.mt940;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -28,6 +31,8 @@ public class MT940 {
 
 	public static void main(String[] args) {
 		try {
+			
+			ArrayList<String> codeTransaction = new ArrayList<String>(); 
 			
 			File dir = new File("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\");
 			
@@ -135,7 +140,16 @@ public class MT940 {
 								
 					for(StatementLine sl : trn20.getStatementLineList()) {
 						if(sl != null && sl.isThereStatementLine61() == true) {
-																		
+							
+							String[] myCodes = new String[codeTransaction.size()];
+							myCodes = codeTransaction.toArray(myCodes);
+							
+							Arrays.sort(myCodes);
+							
+							if(!(Arrays.binarySearch(myCodes, sl.getStatementLine61().getInstitutionReference()) >= 0 )){
+								codeTransaction.add(sl.getStatementLine61().getInstitutionReference());
+							}
+							
 							branch = sl.isThereAccountOwnerInformation86()?sl.getAccountOwnerInformation86().validateBranchOperation():"NULL";
 							reference = "NULL";
 							reference = (sl.isThereStatementLine61() && StringUtils.isNumber(sl.getStatementLine61().getAccountOwnerReference()))?sl.getStatementLine61().getAccountOwnerReference():"NULL";       
@@ -244,6 +258,10 @@ public class MT940 {
 				bw.close();
 				
 				System.out.println(content.toString());
+				
+				System.out.println("code transaction.............................");
+				
+				System.out.println(codeTransaction);
 				
 			}
 			
