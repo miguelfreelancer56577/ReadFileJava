@@ -32,7 +32,8 @@ public class MT940 {
 	public static void main(String[] args) {
 		try {
 			
-			ArrayList<String> codeTransaction = new ArrayList<String>(); 
+			ArrayList<String> codeTransaction = new ArrayList<String>();
+			ArrayList<String> nameTransaction = new ArrayList<String>();
 			
 			File dir = new File("C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\");
 			
@@ -65,7 +66,7 @@ public class MT940 {
 				xlsFileName.append(currentMt940.getName());
 				xlsFileName.append(".xls");
 				
-				WorkBookXls repo = new Repo2(xlsFileName.toString());
+				WorkBookXls repo = new ReviewOtherBanks(xlsFileName.toString());
 				repo.setSheetName(currentMt940.getName());
 //				repo.setCellHeadName("Accounts");
 				repo.createBodyXls(objList);
@@ -146,9 +147,130 @@ public class MT940 {
 							
 							Arrays.sort(myCodes);
 							
+							String[] nameTransaccions = new String[nameTransaction.size()];
+							nameTransaccions = nameTransaction.toArray(nameTransaccions);
+							
+							Arrays.sort(nameTransaccions);
+							
 							if(!(Arrays.binarySearch(myCodes, sl.getStatementLine61().getInstitutionReference()) >= 0 )){
 								codeTransaction.add(sl.getStatementLine61().getInstitutionReference());
 							}
+							
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5611")){
+								String string = "5611: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1009")){
+								String string = "1009: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5453")){
+								String string = "5453: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1413")){
+								String string = "1413: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5571")){
+								String string = "5571: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5853")){
+								String string = "5853: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5803")){
+								String string = "5803: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5221")){
+								String string = "5221: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5519")){
+								String string = "5519: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1441")){
+								String string = "1441: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5861")){
+								String string = "5861: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5543")){
+								String string = "5543: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("5148")){
+								String string = "5148: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("4697")){
+								String string = "4697: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1005")){
+								String string = "1005: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("4011")){
+								String string = "4011: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1537")){
+								String string = "1537: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("1015")){
+								String string = "1015: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							if(sl.getStatementLine61().getInstitutionReference().equalsIgnoreCase("4223")){
+								String string = "4223: " + currentMt940.getName();
+								if(!(Arrays.binarySearch(nameTransaccions, string) >= 0 )){
+									nameTransaction.add(string);
+								}
+							}
+							
 							
 							branch = sl.isThereAccountOwnerInformation86()?sl.getAccountOwnerInformation86().validateBranchOperation():"NULL";
 							reference = "NULL";
@@ -262,6 +384,10 @@ public class MT940 {
 				System.out.println("code transaction.............................");
 				
 				System.out.println(codeTransaction);
+				
+				System.out.println("name transactions.............................");
+				
+				System.out.println(nameTransaction);
 				
 			}
 			
