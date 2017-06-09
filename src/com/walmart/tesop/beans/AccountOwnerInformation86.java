@@ -22,6 +22,9 @@ public class AccountOwnerInformation86 {
 	private String reference;
 	private String totalAmount;
 	
+	//This string saves the concurrent line
+	private String currenteLine;
+	
 	public String getProductTypeId() {
 		return productTypeId;
 	}
@@ -63,6 +66,12 @@ public class AccountOwnerInformation86 {
 			ex.printStackTrace();
 		}
 		return "NULL";
+	}
+	public String getCurrenteLine() {
+		return currenteLine;
+	}
+	public void setCurrenteLine(String currenteLine) {
+		this.currenteLine = currenteLine;
 	}
 	
 }

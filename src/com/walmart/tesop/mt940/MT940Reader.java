@@ -285,6 +285,10 @@ public class MT940Reader {
 		try {
 			
 			aoi = new AccountOwnerInformation86();
+			
+//			it save the line to process
+			aoi.setCurrenteLine(value);
+			
 			aoi.setProductTypeId(value.split("/")[1]);
 			aoi.setProductType(value.split("/")[2]);
 			 
@@ -332,6 +336,10 @@ public class MT940Reader {
 		try {
 			
 			sl = new StatementLine61();
+			
+//			it save the line to process
+			sl.setCurrenteLine(value);
+			
 			sl.setValueDate(value.substring(0, 6));
 			sl.setEntryDate(value.substring(6, 10));
 			sl.setCardType(value.substring(10, 11));
@@ -510,6 +518,10 @@ public class MT940Reader {
 		try {
 			
 			sd = new SuplementaryDetails99();
+			
+//			it save the line to process
+			sd.setCurrenteLine(value);
+			
 			sd.setBankCodeId(value.split("/")[1]);
 			sd.setBankCode(value.split("/")[2]);
 			sd.setBankCodeDescription(value.split("/")[3]);

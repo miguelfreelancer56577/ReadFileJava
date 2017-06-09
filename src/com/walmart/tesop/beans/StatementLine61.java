@@ -23,6 +23,9 @@ public class StatementLine61 {
 	private String institutionReference;
 	private int movementType;
 	
+	//This string saves the concurrent line
+	private String currenteLine;
+	
 	public StatementLine61() {
 		super();
 	}
@@ -96,5 +99,12 @@ public class StatementLine61 {
 	}
 	public void setMovementType(int movementType) {
 		this.movementType = movementType;
-	}	
+	}
+	public String getCurrenteLine() {
+		return currenteLine;
+	}
+	public void setCurrenteLine(String currenteLine) {
+		this.currenteLine = currenteLine;
+	}
+	
 }

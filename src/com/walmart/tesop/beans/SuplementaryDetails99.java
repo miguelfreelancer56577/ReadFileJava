@@ -15,6 +15,9 @@ public class SuplementaryDetails99 {
 	private String bankCode;
 	private String bankCodeDescription;
 	
+	//This string saves the concurrent line
+	private String currenteLine;
+	
 	public SuplementaryDetails99() {
 		super();
 	}
@@ -593,8 +596,11 @@ public class SuplementaryDetails99 {
 		
 		return bankCode==null?"0":bankCode;
 	}
+	public String getCurrenteLine() {
+		return currenteLine;
+	}
+	public void setCurrenteLine(String currenteLine) {
+		this.currenteLine = currenteLine;
+	}
 	
-	
-	
-
 }
