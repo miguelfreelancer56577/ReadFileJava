@@ -6,11 +6,11 @@ import java.util.List;
 
 public class GroupingBancomer {
 	
-	protected List<GroupBancomer> groupings = new ArrayList<GroupBancomer>();
+	private List<GroupBancomer> groupings = new ArrayList<GroupBancomer>();
 	
-	protected static GroupingBancomer groupingBancomer;
+	private static GroupingBancomer groupingBancomer;
 	
-	protected GroupingBancomer(){
+	private GroupingBancomer(){
 		
 		HashMap<String, String> transactions = new HashMap<String, String> ();
 		
