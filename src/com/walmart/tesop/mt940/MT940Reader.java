@@ -52,7 +52,7 @@ public class MT940Reader {
 			String value;
 			String reference;
 			
-			String pathIn = "C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_HSBC_20170322";
+			String pathIn = "C:\\Users\\vn0x53q\\workspaceKepler\\repoFiles\\MT940_BANCOMER_20170309";
 			
 			File concurrentFile = new File(pathIn);
 			
